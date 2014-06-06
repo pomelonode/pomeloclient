@@ -390,7 +390,6 @@ var bt2Str = function(byteArray,start,end) {
       msg = arguments[1];
       cb = arguments[2];
     }
-    msg = filter(msg,route);
   id++; 
   callbacks[id] = cb;
   var sg = Protocol.encode(id,route,msg);
@@ -441,16 +440,5 @@ var bt2Str = function(byteArray,start,end) {
     for(var i=0, l=msgs.length; i<l; i++) {
       processMessage(pomelo, msgs[i]);
     }
-  };
-
-  function filter(msg,route){
-    if(route.indexOf('area.') === 0){
-      msg.areaId = pomelo.areaId;
-    }
-
-    msg.timestamp = Date.now();
-    return msg;
-  }
-
-  
+  };  
 })();
