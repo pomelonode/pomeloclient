@@ -143,11 +143,6 @@
 
       if (m && m > 0 && this._events[type].length > m) {
         this._events[type].warned = true;
-        console.error('(node) warning: possible EventEmitter memory ' +
-                      'leak detected. %d listeners added. ' +
-                      'Use emitter.setMaxListeners() to increase limit.',
-        this._events[type].length);
-        console.trace();
       }
     }
 
@@ -263,14 +258,9 @@
     socket = io.connect(url, {'force new connection': true, reconnect: false});
 
     socket.on('connect', function(){
-      console.log('[pomeloclient.init] websocket connected!');
       if (cb) {
         cb(socket);
       }
-    });
-
-    socket.on('reconnect', function() {
-      console.log('reconnect');
     });
 
     socket.on('message', function(data){
@@ -285,7 +275,7 @@
     });
 
     socket.on('error', function(err) {
-      console.log(err);
+      pomelo.emit('error', err);
     });
 
     socket.on('disconnect', function(reason) {
@@ -340,7 +330,6 @@
       
       delete callbacks[msg.id];
       if(typeof cb !== 'function') {
-        console.log('[pomeloclient.processMessage] cb is not a function for request ' + msg.id);
         return;
       }
 
@@ -375,30 +364,3 @@
   };
 
 })();
-
-/**
-var encode = function(reqId, route, msg) {
-  if (!!reqId) {
-    return{
-      id: reqId,
-      body: msg
-    };
-  } else {
-    var m = {
-      route: route,
-      body: msg
-    };
-    return JSON.stringify(m);
-  }
-};
-
-var decode = function(data) {
-  data = JSON.parse(data);
-  return {
-    id: data.id,
-    route: data.route,
-    body: data.msg
-  };
-};
-
-*/
